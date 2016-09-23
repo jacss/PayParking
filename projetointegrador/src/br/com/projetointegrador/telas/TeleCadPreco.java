@@ -33,7 +33,7 @@ public class TeleCadPreco extends JInternalFrame {
 	private JCheckBox chckbxEstraviado;
 	Preco obj;
 	PrecoDao DAO = new PrecoDao();
-	
+	String acao = "";
 	private JTable table;
 	private List<Preco> list = new ArrayList<Preco>();
 
@@ -57,17 +57,13 @@ public class TeleCadPreco extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public TeleCadPreco() {
-		setTitle("Tabela de Pre\u00E7os");
 		setClosable(true);
 		setIconifiable(true);
 		setMaximizable(true);
-		setBounds(-10, 0, 567, 500);
+		setBounds(0, 0, 567, 514);
 		getContentPane().setLayout(null);
-		
 		GUIUtil.setLookAndFeel(this);// Colocando a aparencia do Windows
 		GUIUtil.center(this);//centralizando a janela
-		
-		
 		JLabel lblTabelaDePreos = new JLabel("Tabela de Pre\u00E7os");
 		lblTabelaDePreos.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblTabelaDePreos.setBounds(185, 29, 171, 39);
@@ -163,12 +159,12 @@ public class TeleCadPreco extends JInternalFrame {
 			}
 		});
 		btnEditar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnEditar.setBounds(175, 142, 79, 23);
+		btnEditar.setBounds(125, 142, 79, 23);
 		getContentPane().add(btnEditar);
 
 		JButton btnDeletar = new JButton("Deletar");
 		btnDeletar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnDeletar.setBounds(307, 142, 79, 23);
+		btnDeletar.setBounds(224, 142, 79, 23);
 		getContentPane().add(btnDeletar);
 
 		JButton btnNewButton = new JButton("Novo");
@@ -176,12 +172,44 @@ public class TeleCadPreco extends JInternalFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				limparCampos();
 
-				
+				acao = "Incluir";
 			}
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnNewButton.setBounds(449, 142, 71, 23);
+		btnNewButton.setBounds(333, 142, 71, 23);
 		getContentPane().add(btnNewButton);
+
+		JButton btnPesquisar = new JButton("Pesquisar");
+//		btnPesquisar.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				try {
+//					if (textId.getText().equals("")) {
+//						textId.requestFocus();
+//
+//					} else {
+//						obj = DAO.pesquisar(textId.getText());
+//						if (obj == null) {
+//							JOptionPane.showMessageDialog(null, "Usuario não encontrado");
+//
+//						} else {
+//							textValor.setText(Double.toString(obj.getValor()));
+//							comboTicketBox.setSelectedIndex(obj.getPerca());
+//							textTempoPerm.setText(obj.getTempo());
+//
+//						}
+//
+//					}
+//					;
+//				} catch (Exception e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//
+//			}
+//		});
+		btnPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnPesquisar.setBounds(414, 142, 104, 23);
+		getContentPane().add(btnPesquisar);
 		
 		chckbxEstraviado = new JCheckBox("Ticket Extraviado");
 		chckbxEstraviado.setBounds(333, 97, 120, 23);
@@ -236,12 +264,12 @@ public class TeleCadPreco extends JInternalFrame {
 	}
 
 	public boolean validarCampos() {
-		if (textValor.getText().equals("")) {
+		if (textValor == null) {
 			JOptionPane.showMessageDialog(null, "Preencha o campo valor!!");
 			textValor.requestFocus();
 			return false;
 		}
-		if (textTempoPerm.getText().equals("")) {
+		if (textTempoPerm == null) {
 			JOptionPane.showMessageDialog(null, "Preencha o campo Permanência!!");
 			textTempoPerm.requestFocus();
 			return false;

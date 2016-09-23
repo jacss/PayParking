@@ -36,26 +36,26 @@ public class PrecoDao {
 
 	}
 
-//	public Preco pesquisar(String id_preco) throws Exception {
-//		Preco obj = null;
-//		sql = "select * from preco where id_preco=?";
-//		pst = conexao.getCon().prepareStatement(sql);
-//		pst.setInt(1, Integer.parseInt(id_preco));
-//
-//		rs = pst.executeQuery();
-//
-//		if (rs.next()) {
-//			obj = new Preco();
-//
-//
-//			obj.setValor(rs.getDouble("valor"));
-//			obj.setPerca(rs.getBoolean("perca"));
-//			obj.setTempo(rs.getString("tempo"));
-//
-//		}
-//
-//		return obj;
-//	}
+	public Preco pesquisar(String id_preco) throws Exception {
+		Preco obj = null;
+		sql = "select * from preco where id_preco=?";
+		pst = conexao.getCon().prepareStatement(sql);
+		pst.setInt(1, Integer.parseInt(id_preco));
+
+		rs = pst.executeQuery();
+
+		if (rs.next()) {
+			obj = new Preco();
+
+
+			obj.setValor(rs.getDouble("valor"));
+			obj.setPerca(rs.getBoolean("perca"));
+			obj.setTempo(rs.getString("tempo"));
+
+		}
+
+		return obj;
+	}
 
 	public boolean editar(Preco obj) throws Exception {
 		sql = "update preco set valor=?, perca=?, tempo=? where id_preco=?";
