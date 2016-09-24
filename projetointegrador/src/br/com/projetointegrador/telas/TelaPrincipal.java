@@ -46,14 +46,15 @@ public class TelaPrincipal extends JFrame {
 	 * Create the frame.
 	 */
 	public TelaPrincipal() {
-		setResizable(false);
+		setResizable(true);
 		
 		setMaximizedBounds(new Rectangle(0, 0, 0, 0));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1200, 600);
+		setBounds(100, 100, 1361, 725);
 		GUIUtil.setLookAndFeel(this);
 		GUIUtil.center(this);
-		setExtendedState(Frame.MAXIMIZED_BOTH);// a janela sempre sera maximizada
+	
+		//setExtendedState(Frame.MAXIMIZED_BOTH);// a janela sempre sera maximizada
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -62,6 +63,13 @@ public class TelaPrincipal extends JFrame {
 		menuBar.add(mnCadastro);
 		
 		JMenuItem itmMenuCadUsuario = new JMenuItem("Cadastrar Usu\u00E1rio");
+		itmMenuCadUsuario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TelaUsuario tu = new TelaUsuario();
+				tu.setVisible(true);
+				desktopPane.add(tu);
+			}
+		});
 		mnCadastro.add(itmMenuCadUsuario);
 		
 		JMenuItem itemMenuCadastrarPreos = new JMenuItem("Cadastrar Pre\u00E7os");
