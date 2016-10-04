@@ -11,19 +11,20 @@ import br.com.projetointegrador.modelo.Preco;
 import br.com.projetointegrdor.conexao.Conexao;
 
 public class PrecoDao {
-	Conexao conexao = Conexao.getInstancia();
-	String sql;
-	PreparedStatement pst;
-	ResultSet rs;
-	Preco obj = null;
+	private Conexao conexao = Conexao.getInstancia();
+	private String sql;
+	private PreparedStatement pst;
+	private ResultSet rs;
+	private Preco obj = null;
 
 	public boolean incluir(Preco obj) throws Exception {
-		sql = "insert into preco(valor,perca,tempo) values(?,?,?)";
+		sql = "insert into preco(valor,perca,tempo,fracionado) values(?,?,?,?)";
 		pst = conexao.getCon().prepareStatement(sql);
 
 		pst.setDouble(1, obj.getValor());
 		pst.setBoolean(2, obj.isPerca());
 		pst.setString(3, obj.getTempo());
+		pst.setBoolean(4, obj.isFracionado());
 
 		int registros = pst.executeUpdate();
 		if (registros > 0) {
@@ -58,14 +59,16 @@ public class PrecoDao {
 //	}
 
 	public boolean editar(Preco obj) throws Exception {
-		sql = "update preco set valor=?, perca=?, tempo=? where id_preco=?";
+		sql = "update preco set valor=?, perca=?, tempo=?, fracionado=? where id_preco=?";
 		pst = conexao.getCon().prepareStatement(sql);
 		
 		
 		pst.setDouble(1, obj.getValor());
 		pst.setBoolean(2, obj.isPerca());
 		pst.setString(3, obj.getTempo());
-		pst.setInt(4, obj.getId_preco());
+		pst.setBoolean(4, obj.isFracionado());
+		pst.setInt(5, obj.getId_preco());
+		
 		
 
 		int registro = pst.executeUpdate();
@@ -96,5 +99,18 @@ public class PrecoDao {
 
 		return list;
 	}
+	public boolean deletar(int id_preco)throws Exception{
+		sql = "delete from preco where id_preco=?";
+		pst = conexao.getCon().prepareStatement(sql);
+		
+		pst.setInt(1, id_preco);
+		
+		int registro=pst.executeUpdate();
+		if(registro >0)
+			return true;
+		else
+			return false;
+		
+		}
 
 }

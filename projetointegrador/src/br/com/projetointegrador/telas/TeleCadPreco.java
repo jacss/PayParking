@@ -31,8 +31,9 @@ public class TeleCadPreco extends JInternalFrame {
 	private JTextField textValor;
 	private JTextField textTempoPerm;
 	private JCheckBox chckbxEstraviado;
-	Preco obj;
-	PrecoDao DAO = new PrecoDao();
+	private JCheckBox chckbxFracionado;
+	private Preco obj = new Preco();
+	private PrecoDao dao = new PrecoDao();
 	
 	private JTable table;
 	private List<Preco> list = new ArrayList<Preco>();
@@ -65,13 +66,7 @@ public class TeleCadPreco extends JInternalFrame {
 		getContentPane().setLayout(null);
 		
 		GUIUtil.setLookAndFeel(this);// Colocando a aparencia do Windows
-		GUIUtil.center(this);//centralizando a janela
-		
-		
-		JLabel lblTabelaDePreos = new JLabel("Tabela de Pre\u00E7os");
-		lblTabelaDePreos.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblTabelaDePreos.setBounds(185, 29, 171, 39);
-		getContentPane().add(lblTabelaDePreos);
+		GUIUtil.center(this);
 
 		JLabel lblValor = new JLabel("Valor R$");
 		lblValor.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -79,48 +74,48 @@ public class TeleCadPreco extends JInternalFrame {
 		getContentPane().add(lblValor);
 
 		textValor = new JTextField();
-		textValor.setBounds(36, 98, 129, 20);
+		textValor.setBounds(36, 98, 86, 20);
 		getContentPane().add(textValor);
 		textValor.setColumns(10);
 
 		JLabel lblTempoPermanncia = new JLabel("Tempo Perman\u00EAncia");
 		lblTempoPermanncia.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblTempoPermanncia.setBounds(185, 75, 132, 24);
+		lblTempoPermanncia.setBounds(143, 75, 132, 24);
 		getContentPane().add(lblTempoPermanncia);
 
 		textTempoPerm = new JTextField();
-		textTempoPerm.setBounds(185, 98, 132, 20);
+		textTempoPerm.setBounds(143, 98, 132, 20);
 		getContentPane().add(textTempoPerm);
 		textTempoPerm.setColumns(10);
 
 		JButton btnGravar = new JButton("Gravar");
 		btnGravar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if (validarCampos()) {// validar campos
-						if (preencherObjeto()) {// preencher o objeto
-							// salvar no banco
-							
-								if (DAO.incluir(obj)) {
-									JOptionPane.showMessageDialog(null, "Registro Salvo com Sucesso!!");
-									
-									try {
-										atualizaJTable();
-									} catch (Exception e1) {
-										// TODO Auto-generated catch block
-										e1.printStackTrace();
-									}
-								} else {
-									JOptionPane.showMessageDialog(null, "Não foi possivel salvar!!");
-								}
-							
+				
+				try { 
+					validarCampos();
+					
+					preencherObjeto();
+					if(dao.incluir(obj)){
+						JOptionPane.showMessageDialog(null, "Dados inseridos com com sucesso!!");
+						System.out.println("Sucesso");
+						try {
+							atualizaJTable();
+						} catch (Exception e2) {
+							// TODO: handle exception
+							e2.printStackTrace();
 						}
-
+						
+					}else{
+						JOptionPane.showMessageDialog(null, "Não foi possivel alterar os dados!!");
 					}
-				} catch (Exception erro) {
+					
+				} catch (Exception e2) {
 					// TODO: handle exception
-					JOptionPane.showMessageDialog(null, erro.getMessage());
+					e2.printStackTrace();
 				}
+			
+
 
 			}
 		});
@@ -136,7 +131,8 @@ public class TeleCadPreco extends JInternalFrame {
 						if (preencherObjeto()) {// preencher o objeto
 							// salvar no banco
 							
-								if (DAO.editar(obj)) {
+								if (dao.editar(obj)) {
+									
 									JOptionPane.showMessageDialog(null, "Dados alterados com sucesso!!");
 									limparCampos();
 									try {
@@ -167,6 +163,24 @@ public class TeleCadPreco extends JInternalFrame {
 		getContentPane().add(btnEditar);
 
 		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try { 
+				
+					preencherCampos();
+					if(dao.deletar(obj.getId_preco())){
+						JOptionPane.showMessageDialog(null, "Registro Removido com sucesso");
+						atualizaJTable();
+						limparCampos();
+					}
+					
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				
+			}
+		});
 		btnDeletar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnDeletar.setBounds(307, 142, 79, 23);
 		getContentPane().add(btnDeletar);
@@ -184,8 +198,12 @@ public class TeleCadPreco extends JInternalFrame {
 		getContentPane().add(btnNewButton);
 		
 		chckbxEstraviado = new JCheckBox("Ticket Extraviado");
-		chckbxEstraviado.setBounds(333, 97, 120, 23);
+		chckbxEstraviado.setBounds(292, 97, 109, 23);
 		getContentPane().add(chckbxEstraviado);
+		
+		chckbxFracionado = new JCheckBox("Fracionado");
+		chckbxFracionado.setBounds(423, 97, 97, 23);
+		getContentPane().add(chckbxFracionado);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(42, 206, 478, 267);
@@ -208,12 +226,14 @@ public class TeleCadPreco extends JInternalFrame {
 		}
 		
 		scrollPane.setViewportView(table);
+		
+	
 
 	}
 
 	private void atualizaJTable() throws Exception {
 		
-		list=DAO.todososPrecos();
+		list=dao.todososPrecos();
 		
 		Object[][] dados = new Object[list.size()][4];
 		
@@ -222,6 +242,7 @@ public class TeleCadPreco extends JInternalFrame {
 			dados[i][1]=list.get(i).getValor();
 			dados[i][2]=list.get(i).isPerca()?"Sim":"Não";
 			dados[i][3]=list.get(i).isFracionado()?"Sim":"Não";
+			
 		}
 		
 		
@@ -253,7 +274,8 @@ public class TeleCadPreco extends JInternalFrame {
 	public boolean preencherObjeto() throws Exception {
 		obj.setValor(Double.parseDouble(textValor.getText()));
 		obj.setTempo(textTempoPerm.getText());
-		obj.setPerca(chckbxEstraviado.isSelected());		
+		obj.setPerca(chckbxEstraviado.isSelected());
+		obj.setFracionado(chckbxFracionado.isSelected());
 		return true;
 
 	}
@@ -262,6 +284,7 @@ public class TeleCadPreco extends JInternalFrame {
 		textValor.setText(""+obj.getValor());
 		textTempoPerm.setText(obj.getTempo());
 		chckbxEstraviado.setSelected(obj.isPerca());
+		chckbxFracionado.setSelected(obj.isFracionado());
 		
 	}
 	

@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Rectangle;
 import java.awt.Color;
 import java.awt.Dimension;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
 
 public class TelaPrincipal extends JFrame {
 
@@ -48,13 +50,13 @@ public class TelaPrincipal extends JFrame {
 	public TelaPrincipal() {
 		setResizable(true);
 		
-		setMaximizedBounds(new Rectangle(0, 0, 0, 0));
+		//setMaximizedBounds(new Rectangle(0, 0, 0, 0));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1361, 725);
+		//setBounds(100, 100, 1361, 725);
 		GUIUtil.setLookAndFeel(this);
 		GUIUtil.center(this);
 	
-		//setExtendedState(Frame.MAXIMIZED_BOTH);// a janela sempre sera maximizada
+		setExtendedState(Frame.MAXIMIZED_BOTH);// a janela sempre sera maximizada
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -83,6 +85,16 @@ public class TelaPrincipal extends JFrame {
 		});
 		mnCadastro.add(itemMenuCadastrarPreos);
 		
+		JMenuItem form_pagamento = new JMenuItem("Cadastra Forma Pagamento");
+		form_pagamento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TelaFormaPagamento fp = new TelaFormaPagamento();
+				desktopPane.add(fp);
+				fp.setVisible(true);
+			}
+		});
+		mnCadastro.add(form_pagamento);
+		
 		JMenu mnOpes = new JMenu("Op\u00E7\u00F5es");
 		menuBar.add(mnOpes);
 		
@@ -102,6 +114,8 @@ public class TelaPrincipal extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		desktopPane = new JDesktopPane();
+		desktopPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(128, 128, 128), new Color(128, 128, 128), new Color(128, 128, 128), new Color(128, 128, 128)));
+		desktopPane.setBackground(new Color(238, 232, 170));
 		contentPane.add(desktopPane);
 	}
 }

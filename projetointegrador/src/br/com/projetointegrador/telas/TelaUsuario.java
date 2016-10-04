@@ -20,6 +20,9 @@ import br.com.projetointegrador.modelo.Usuario;
 import br.com.projetointegrador.util.GUIUtil;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import java.awt.Font;
+import java.awt.Color;
 
 public class TelaUsuario extends JInternalFrame {
 	private JTextField textNome;
@@ -55,6 +58,10 @@ public class TelaUsuario extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public TelaUsuario() {
+		getContentPane().setBackground(new Color(240, 240, 240));
+		setClosable(true);
+		setIconifiable(true);
+		setMaximizable(true);
 		setTitle("Cadastro de Usu\u00E1rios");
 		setBounds(0, 100, 567, 500);
 		GUIUtil.setLookAndFeel(this);
