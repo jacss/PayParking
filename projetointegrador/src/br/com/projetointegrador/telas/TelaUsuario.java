@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import br.com.projetointegrador.dao.UsuarioDao;
+
 import br.com.projetointegrador.modelo.Usuario;
 import br.com.projetointegrador.util.GUIUtil;
 import java.awt.event.MouseAdapter;
@@ -31,12 +32,10 @@ public class TelaUsuario extends JInternalFrame {
 	private JTextField textTelefone;
 	private JTextField textLogin;
 	private JTextField textSenha;
-	private Usuario usuario = new Usuario();
+	private Usuario obj = new Usuario();
 	private UsuarioDao dao = new UsuarioDao();
 	private JTable table;
 	private List<Usuario> list = new ArrayList<Usuario>();
-
-
 
 	/**
 	 * Launch the application.
@@ -107,26 +106,25 @@ public class TelaUsuario extends JInternalFrame {
 		JButton btnGravar = new JButton("Gravar");
 		btnGravar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				try {
-					validarCampos();
-					preencheObjeto();
-					if (dao.incluir(usuario)) {
-						JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso!!");
-						atualizaJTable();
-					} else {
-						JOptionPane.showMessageDialog(null, "Não foi possivel cadastra o usuário!!");
-
+					if (validarCampos()) {
+						if (preencheObjeto()) {
+							if (dao.salvar(obj)) {
+								JOptionPane.showMessageDialog(null, "Registro salvo com sucesso!!");
+								atualizaJTable();
+								limpaCampos();
+							}
+						}
 					}
+
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+					// TODO: handle exception
 					e.printStackTrace();
 				}
-				
-				
+
 			}
 		});
-		btnGravar.setBounds(39, 219, 89, 23);
+		btnGravar.setBounds(107, 219, 89, 23);
 		getContentPane().add(btnGravar);
 
 		JButton btnNovo = new JButton("Novo");
@@ -135,53 +133,29 @@ public class TelaUsuario extends JInternalFrame {
 				limpaCampos();
 			}
 		});
-		btnNovo.setBounds(423, 219, 89, 23);
+		btnNovo.setBounds(332, 219, 89, 23);
 		getContentPane().add(btnNovo);
-
-		JButton btnEditar = new JButton("Editar");
-		btnEditar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				try {
-					validarCampos();
-					preencheObjeto();
-					//atualizaCampos();
-					if (dao.editar(usuario)) {
-						JOptionPane.showMessageDialog(null, "Usuário atualizado com Sucesso!!");
-						atualizaJTable();
-					} else {
-						JOptionPane.showMessageDialog(null, "Não foi possivel atualizar o usuário!!");
-					}
-					
-					
-				} catch (Exception e2) {
-					// TODO: handle exception
-					e2.printStackTrace();
-				}
-			}
-		});
-		btnEditar.setBounds(167, 219, 89, 23);
-		getContentPane().add(btnEditar);
 
 		JButton btnDeletar = new JButton("Deletar");
 		btnDeletar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					
+
 					if (dao.deletar(textCnpjCpf.getText())) {
 						JOptionPane.showMessageDialog(null, "Usuário deletado com Sucesso!!");
 						atualizaJTable();
+						limpaCampos();
 					} else {
 						JOptionPane.showMessageDialog(null, "Não foi possivel deletar o usuário!!");
 					}
-					
+
 				} catch (Exception e2) {
 					// TODO: handle exception
 					e2.printStackTrace();
 				}
 			}
 		});
-		btnDeletar.setBounds(295, 219, 89, 23);
+		btnDeletar.setBounds(220, 219, 89, 23);
 		getContentPane().add(btnDeletar);
 
 		JLabel lblLogin = new JLabel("Login");
@@ -201,22 +175,22 @@ public class TelaUsuario extends JInternalFrame {
 		textSenha.setBounds(278, 183, 234, 20);
 		getContentPane().add(textSenha);
 		textSenha.setColumns(10);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
-		
+
 		scrollPane.setBounds(39, 261, 472, 171);
 		getContentPane().add(scrollPane);
-		
+
 		table = new JTable();
-		
+
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				usuario=list.get(table.getSelectedRow());
+				obj = list.get(table.getSelectedRow());
 				atualizaCampos();
 			}
 		});
-		
+
 		try {
 			atualizaJTable();
 		} catch (Exception e1) {
@@ -224,31 +198,25 @@ public class TelaUsuario extends JInternalFrame {
 			e1.printStackTrace();
 		}
 		scrollPane.setViewportView(table);
-		
-		
 
 	}
-	public void atualizaJTable()throws Exception{
+
+	public void atualizaJTable() throws Exception {
 		list = dao.listaTodosUsuarios();
 		Object[][] dados = new Object[list.size()][6];
-		
-		for(int i = 0; i<dados.length; i++){
-			dados[i][0]= list.get(i).getCnpj_cpf();
-			dados[i][1]= list.get(i).getNome();
-			dados[i][2]= list.get(i).getEmail();
-			dados[i][3]= list.get(i).getLogin();
-			dados[i][4]= list.get(i).getSenha();
-			dados[i][5]= list.get(i).getTelefone();
-			
-			
+
+		for (int i = 0; i < dados.length; i++) {
+			dados[i][0] = list.get(i).getCnpj_cpf();
+			dados[i][1] = list.get(i).getNome();
+			dados[i][2] = list.get(i).getEmail();
+			dados[i][3] = list.get(i).getLogin();
+			dados[i][4] = list.get(i).getSenha();
+			dados[i][5] = list.get(i).getTelefone();
+
 		}
-		
-		table.setModel(new DefaultTableModel(
-			dados,
-				new String[] {
-					"Cnpj/Cpf", "Nome", "E-Mail", "Login", "Senha", "Telefone"
-				}
-			));
+
+		table.setModel(new DefaultTableModel(dados,
+				new String[] { "Cnpj/Cpf", "Nome", "E-Mail", "Login", "Senha", "Telefone" }));
 	}
 
 	public boolean validarCampos() {
@@ -292,30 +260,34 @@ public class TelaUsuario extends JInternalFrame {
 	}
 
 	public void atualizaCampos() {
-		textNome.setText(usuario.getNome());
-		textMail.setText(usuario.getEmail());
-		textCnpjCpf.setText(String.valueOf(usuario.getCnpj_cpf()));
-		textTelefone.setText(usuario.getTelefone());
-		textLogin.setText(usuario.getLogin());
-		textSenha.setText(usuario.getSenha());
+		textNome.setText(obj.getNome());
+		textMail.setText(obj.getEmail());
+		textCnpjCpf.setText(String.valueOf(obj.getCnpj_cpf()));
+		textTelefone.setText(obj.getTelefone());
+		textLogin.setText(obj.getLogin());
+		textSenha.setText(obj.getSenha());
 
-		
 	}
-	public void preencheObjeto(){
-		usuario.setCnpj_cpf(textCnpjCpf.getText());
-		usuario.setNome(textNome.getText());
-		usuario.setEmail(textMail.getText());
-		usuario.setLogin(textLogin.getText());
-		usuario.setSenha(textSenha.getText());
-		usuario.setTelefone(textTelefone.getText());
+
+	public boolean preencheObjeto() throws Exception {
+		obj.setCnpj_cpf(textCnpjCpf.getText());
+		obj.setNome(textNome.getText());
+		obj.setEmail(textMail.getText());
+		obj.setLogin(textLogin.getText());
+		obj.setSenha(textSenha.getText());
+		obj.setTelefone(textTelefone.getText());
+		return true;
 	}
-	public void limpaCampos(){
+
+	public void limpaCampos() {
 		textCnpjCpf.setText("");
 		textNome.setText("");
 		textMail.setText("");
 		textLogin.setText("");
 		textSenha.setText("");
 		textTelefone.setText("");
-		
+		obj = null;
+		obj = new Usuario();
+
 	}
 }

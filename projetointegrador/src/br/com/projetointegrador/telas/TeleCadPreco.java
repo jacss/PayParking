@@ -34,7 +34,7 @@ public class TeleCadPreco extends JInternalFrame {
 	private JCheckBox chckbxFracionado;
 	private Preco obj = new Preco();
 	private PrecoDao dao = new PrecoDao();
-	
+
 	private JTable table;
 	private List<Preco> list = new ArrayList<Preco>();
 
@@ -64,7 +64,7 @@ public class TeleCadPreco extends JInternalFrame {
 		setMaximizable(true);
 		setBounds(-10, 0, 567, 500);
 		getContentPane().setLayout(null);
-		
+
 		GUIUtil.setLookAndFeel(this);// Colocando a aparencia do Windows
 		GUIUtil.center(this);
 
@@ -91,98 +91,52 @@ public class TeleCadPreco extends JInternalFrame {
 		JButton btnGravar = new JButton("Gravar");
 		btnGravar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				try { 
-					validarCampos();
-					
-					preencherObjeto();
-					if(dao.incluir(obj)){
-						JOptionPane.showMessageDialog(null, "Dados inseridos com com sucesso!!");
-						System.out.println("Sucesso");
-						try {
-							atualizaJTable();
-						} catch (Exception e2) {
-							// TODO: handle exception
-							e2.printStackTrace();
+				try {
+					if (validarCampos()) {
+						if (preencherObjeto()) {
+							if (dao.salvar(obj)) {
+								JOptionPane.showMessageDialog(null, "Resistro inserido com sucesso!!");
+								atualizaJTable();
+								limparCampos();
+
+							}
 						}
-						
-					}else{
-						JOptionPane.showMessageDialog(null, "Não foi possivel alterar os dados!!");
+
 					}
-					
+
 				} catch (Exception e2) {
 					// TODO: handle exception
 					e2.printStackTrace();
 				}
-			
-
+				
 
 			}
 		});
 		btnGravar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnGravar.setBounds(36, 142, 79, 23);
+		btnGravar.setBounds(117, 142, 79, 23);
 		getContentPane().add(btnGravar);
-
-		JButton btnEditar = new JButton("Editar");
-		btnEditar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					if (validarCampos()) {// validar campos
-						if (preencherObjeto()) {// preencher o objeto
-							// salvar no banco
-							
-								if (dao.editar(obj)) {
-									
-									JOptionPane.showMessageDialog(null, "Dados alterados com sucesso!!");
-									limparCampos();
-									try {
-										atualizaJTable();
-									} catch (Exception e1) {
-										// TODO Auto-generated catch block
-										e1.printStackTrace();
-									}
-									
-								} else {
-									JOptionPane.showMessageDialog(null, "Não foi possivel alterar os dados!!");
-								}
-							
-						}
-
-					}
-				} catch (Exception erro) {
-					erro.printStackTrace();
-					// TODO: handle exception
-					//JOptionPane.showMessageDialog(null, erro.getMessage());
-				}
-
-				
-			}
-		});
-		btnEditar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnEditar.setBounds(175, 142, 79, 23);
-		getContentPane().add(btnEditar);
 
 		JButton btnDeletar = new JButton("Deletar");
 		btnDeletar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try { 
-				
+				try {
+
 					preencherCampos();
-					if(dao.deletar(obj.getId_preco())){
+					if (dao.deletar(obj.getId_preco())) {
 						JOptionPane.showMessageDialog(null, "Registro Removido com sucesso");
 						atualizaJTable();
 						limparCampos();
 					}
-					
+
 				} catch (Exception e) {
 					// TODO: handle exception
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
 		btnDeletar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnDeletar.setBounds(307, 142, 79, 23);
+		btnDeletar.setBounds(234, 142, 79, 23);
 		getContentPane().add(btnDeletar);
 
 		JButton btnNewButton = new JButton("Novo");
@@ -190,70 +144,61 @@ public class TeleCadPreco extends JInternalFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				limparCampos();
 
-				
 			}
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnNewButton.setBounds(449, 142, 71, 23);
+		btnNewButton.setBounds(345, 142, 71, 23);
 		getContentPane().add(btnNewButton);
-		
+
 		chckbxEstraviado = new JCheckBox("Ticket Extraviado");
 		chckbxEstraviado.setBounds(292, 97, 109, 23);
 		getContentPane().add(chckbxEstraviado);
-		
+
 		chckbxFracionado = new JCheckBox("Fracionado");
 		chckbxFracionado.setBounds(423, 97, 97, 23);
 		getContentPane().add(chckbxFracionado);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(42, 206, 478, 267);
+		scrollPane.setBounds(36, 186, 484, 287);
 		getContentPane().add(scrollPane);
-		
+
 		table = new JTable();
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				obj=list.get(table.getSelectedRow());
+				obj = list.get(table.getSelectedRow());
 				preencherCampos();
 			}
 		});
-		
+
 		try {
 			atualizaJTable();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		scrollPane.setViewportView(table);
-		
-	
 
 	}
 
 	private void atualizaJTable() throws Exception {
-		
-		list=dao.todososPrecos();
-		
+
+		list = dao.todososPrecos();
+
 		Object[][] dados = new Object[list.size()][4];
-		
-		for(int i =0; i<dados.length;i++){
-			dados[i][0]=list.get(i).getTempo();
-			dados[i][1]=list.get(i).getValor();
-			dados[i][2]=list.get(i).isPerca()?"Sim":"Não";
-			dados[i][3]=list.get(i).isFracionado()?"Sim":"Não";
-			
+
+		for (int i = 0; i < dados.length; i++) {
+			dados[i][0] = list.get(i).getTempo();
+			dados[i][1] = list.get(i).getValor();
+			dados[i][2] = list.get(i).isPerca() ? "Sim" : "Não";
+			dados[i][3] = list.get(i).isFracionado() ? "Sim" : "Não";
+
 		}
-		
-		
-		table.setModel(new DefaultTableModel(
-				dados,
-				new String[] {
-					"Tempo Permanencia", "Valor", "Perca", "Fracionado"
-				}
-			));
-		
-		
+
+		table.setModel(
+				new DefaultTableModel(dados, new String[] { "Tempo Permanencia", "Valor", "Perca", "Fracionado" }));
+
 	}
 
 	public boolean validarCampos() {
@@ -281,17 +226,18 @@ public class TeleCadPreco extends JInternalFrame {
 	}
 
 	public void preencherCampos() {
-		textValor.setText(""+obj.getValor());
+		textValor.setText("" + obj.getValor());
 		textTempoPerm.setText(obj.getTempo());
 		chckbxEstraviado.setSelected(obj.isPerca());
 		chckbxFracionado.setSelected(obj.isFracionado());
-		
+
 	}
-	
-	
+
 	public void limparCampos() {
 		textValor.setText("");
 		textTempoPerm.setText("");
 		chckbxEstraviado.setSelected(false);
+		obj=null;
+		obj = new Preco();
 	}
 }
