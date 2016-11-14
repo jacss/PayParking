@@ -180,6 +180,8 @@ public class TelaUsuario extends JInternalFrame {
 
 		scrollPane.setBounds(39, 261, 472, 171);
 		getContentPane().add(scrollPane);
+		
+		
 
 		table = new JTable();
 
@@ -198,6 +200,10 @@ public class TelaUsuario extends JInternalFrame {
 			e1.printStackTrace();
 		}
 		scrollPane.setViewportView(table);
+		
+		
+		
+		
 
 	}
 
@@ -215,8 +221,7 @@ public class TelaUsuario extends JInternalFrame {
 
 		}
 
-		table.setModel(new DefaultTableModel(dados,
-				new String[] { "Cnpj/Cpf", "Nome", "E-Mail", "Login", "Senha", "Telefone" }));
+		table.setModel(new DefaultTableModel(dados, new String[] { "Cnpj/Cpf", "Nome", "E-Mail", "Login", "Senha", "Telefone" }));
 	}
 
 	public boolean validarCampos() {
