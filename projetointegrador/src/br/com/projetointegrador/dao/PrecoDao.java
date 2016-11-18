@@ -7,9 +7,9 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import br.com.projetointegrador.conexao.Conexao;
 import br.com.projetointegrador.modelo.FormaPagamento;
 import br.com.projetointegrador.modelo.Preco;
-import br.com.projetointegrdor.conexao.Conexao;
 
 public class PrecoDao {
 	private Conexao conexao = Conexao.getInstancia();

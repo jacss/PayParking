@@ -1,5 +1,7 @@
 package br.com.projetointegrador.dao;
 
+import java.awt.Component;
+import java.awt.Desktop;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -7,16 +9,17 @@ import java.util.List;
 
 import javax.sql.rowset.spi.TransactionalWriter;
 
+import br.com.projetointegrador.conexao.Conexao;
 import br.com.projetointegrador.modelo.Preco;
 import br.com.projetointegrador.modelo.Usuario;
-import br.com.projetointegrdor.conexao.Conexao;
+import br.com.projetointegrador.telas.TelaPrincipal;
 
 public class UsuarioDao {
 	private Conexao conexao = Conexao.getInstancia();
 	private PreparedStatement pst;
 	private ResultSet rs;
 	private String sql;
-	private Usuario obj;
+	private Usuario obj = null;
 
 	private void incluir(Usuario obj) {
 		sql = "insert into usuario(cnpj_cpf,nome,email,login,senha,telefone) values (?,?,?,?,?,?)";
@@ -98,7 +101,7 @@ public class UsuarioDao {
 			 * show agora cria uma consulta pelo cpf e retorna o objeto usuario.
 			 * 
 			 */
-			if (getUsuarioPeloCPFCNPJ(obj.getCnpj_cpf())==null) {
+			if (getUsuarioPeloCPFCNPJ(obj.getCnpj_cpf()) == null) {
 				incluir(obj);
 
 			} else {
@@ -121,18 +124,18 @@ public class UsuarioDao {
 	 * @throws Exception
 	 */
 	public Usuario getUsuarioPeloCPFCNPJ(String cnjp_cpf) throws Exception {// agora
-																					// e
-																					// com
-																					// vc
-	    Usuario list =null;
+																			// e
+																			// com
+																			// vc
+		Usuario list = null;
 		sql = "select * from usuario where cnpj_cpf=?";
 		pst = conexao.getCon().prepareStatement(sql);
-		pst.setString(1,cnjp_cpf);
+		pst.setString(1, cnjp_cpf);
 
 		rs = pst.executeQuery();
 
 		while (rs.next()) {
-			list=new Usuario(rs.getString("cnpj_cpf"), rs.getString("nome"), rs.getString("email"),
+			list = new Usuario(rs.getString("cnpj_cpf"), rs.getString("nome"), rs.getString("email"),
 					rs.getString("login"), rs.getString("senha"), rs.getString("telefone"));
 
 		}
@@ -151,6 +154,29 @@ public class UsuarioDao {
 		else
 			return false;
 
+	}
+
+	public Usuario logar(String nome, String senha) {
+		sql = "select * from usuario where login=? and senha=?";
+		try {
+			pst = conexao.getCon().prepareStatement(sql);
+			pst.setString(1, nome);
+			pst.setString(2, senha);
+
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				obj = new Usuario(rs.getString("cnpj_cpf"), rs.getString("nome"), rs.getString("email"),
+						rs.getString("login"), rs.getString("senha"), rs.getString("telefone"));
+
+				TelaPrincipal tp = new TelaPrincipal();
+				String login = obj.getLogin();
+
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return obj;
 	}
 
 }

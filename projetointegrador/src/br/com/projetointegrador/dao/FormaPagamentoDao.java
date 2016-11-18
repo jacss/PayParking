@@ -7,8 +7,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import br.com.projetointegrador.conexao.Conexao;
 import br.com.projetointegrador.modelo.FormaPagamento;
-import br.com.projetointegrdor.conexao.Conexao;
 
 public class FormaPagamentoDao {
 

@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import br.com.projetointegrador.modelo.Usuario;
 import br.com.projetointegrador.util.GUIUtil;
 
 import javax.swing.JMenuBar;
@@ -22,11 +23,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
+import javax.swing.JLabel;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import java.awt.CardLayout;
 
 public class TelaPrincipal extends JFrame {
 
 	private JPanel contentPane;
-	private JDesktopPane desktopPane;
+	public JDesktopPane desktopPane;
 
 	/**
 	 * Launch the application.
@@ -64,7 +69,7 @@ public class TelaPrincipal extends JFrame {
 		JMenu mnCadastro = new JMenu("Cadastro");
 		menuBar.add(mnCadastro);
 		
-		JMenuItem itmMenuCadUsuario = new JMenuItem("Cadastrar Usu\u00E1rio");
+		JMenuItem itmMenuCadUsuario = new JMenuItem("Usu\u00E1rio");
 		itmMenuCadUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				TelaUsuario tu = new TelaUsuario();
@@ -74,7 +79,7 @@ public class TelaPrincipal extends JFrame {
 		});
 		mnCadastro.add(itmMenuCadUsuario);
 		
-		JMenuItem itemMenuCadastrarPreos = new JMenuItem("Cadastrar Pre\u00E7os");
+		JMenuItem itemMenuCadastrarPreos = new JMenuItem("Pre\u00E7os");
 		itemMenuCadastrarPreos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				TeleCadPreco tcp = new TeleCadPreco();
@@ -85,7 +90,7 @@ public class TelaPrincipal extends JFrame {
 		});
 		mnCadastro.add(itemMenuCadastrarPreos);
 		
-		JMenuItem form_pagamento = new JMenuItem("Cadastra Forma Pagamento");
+		JMenuItem form_pagamento = new JMenuItem("Forma Pagamento");
 		form_pagamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				TelaFormaPagamento fp = new TelaFormaPagamento();
@@ -109,13 +114,16 @@ public class TelaPrincipal extends JFrame {
 		});
 		mnOpes.add(mntmSair);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new EmptyBorder(5, 5, 50, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(new CardLayout(0, 0));
 		
 		desktopPane = new JDesktopPane();
 		desktopPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(128, 128, 128), new Color(128, 128, 128), new Color(128, 128, 128), new Color(128, 128, 128)));
 		desktopPane.setBackground(new Color(238, 232, 170));
-		contentPane.add(desktopPane);
+		contentPane.add(desktopPane, "name_20261864522096");
+		
+		
+		
 	}
 }

@@ -1,4 +1,4 @@
-package br.com.projetointegrdor.conexao;
+package br.com.projetointegrador.conexao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

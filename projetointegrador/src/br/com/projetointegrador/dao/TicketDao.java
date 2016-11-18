@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Time;
 
+import br.com.projetointegrador.conexao.Conexao;
 import br.com.projetointegrador.modelo.Ticket;
-import br.com.projetointegrdor.conexao.Conexao;
 
 public class TicketDao {
 	private Conexao con = Conexao.getInstancia();
