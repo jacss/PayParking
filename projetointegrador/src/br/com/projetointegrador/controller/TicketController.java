@@ -1,5 +1,6 @@
 package br.com.projetointegrador.controller;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,7 +23,7 @@ public class TicketController {
 		Ticket ticket = new Ticket();
 		ticket.setCod_ticket(CodigoBarraVerificador.codigoVerificador(format.format(data)));
 		ticket.setData(data);
-		ticket.setHora_entrada(data);
+		ticket.setHora_entrada(new Time(data.getTime()));
 		ticket.setHora_saida(null);
 		ticket.setUsuario_cnpj_cpf(null);
 		

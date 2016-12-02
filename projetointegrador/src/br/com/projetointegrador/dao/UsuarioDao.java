@@ -168,8 +168,7 @@ public class UsuarioDao {
 				obj = new Usuario(rs.getString("cnpj_cpf"), rs.getString("nome"), rs.getString("email"),
 						rs.getString("login"), rs.getString("senha"), rs.getString("telefone"));
 
-				TelaPrincipal tp = new TelaPrincipal();
-				String login = obj.getLogin();
+				
 
 			}
 

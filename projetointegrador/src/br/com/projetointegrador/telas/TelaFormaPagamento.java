@@ -48,17 +48,18 @@ public class TelaFormaPagamento extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public TelaFormaPagamento() {
+		getContentPane().setFont(new Font("Tahoma", Font.BOLD, 11));
 		setTitle("Forma de Pagamento");
 		setMaximizable(true);
 		setIconifiable(true);
 		setClosable(true);
 		setBounds(-10, 0, 567, 500);
-		GUIUtil.setLookAndFeel(this);
+		//GUIUtil.setLookAndFeel(this);
 		GUIUtil.center(this);
 		getContentPane().setLayout(null);
 
 		JLabel lblFormaDePagamento = new JLabel("Forma de Pagamento");
-		lblFormaDePagamento.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblFormaDePagamento.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblFormaDePagamento.setBounds(51, 69, 136, 14);
 		getContentPane().add(lblFormaDePagamento);
 
@@ -90,12 +91,12 @@ public class TelaFormaPagamento extends JInternalFrame {
 
 			}
 		});
-		btnGravar.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnGravar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnGravar.setBounds(116, 140, 89, 23);
 		getContentPane().add(btnGravar);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(51, 186, 446, 207);
+		scrollPane.setBounds(51, 174, 446, 207);
 		getContentPane().add(scrollPane);
 
 		table = new JTable();
@@ -116,6 +117,7 @@ public class TelaFormaPagamento extends JInternalFrame {
 		scrollPane.setViewportView(table);
 
 		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnDeletar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				validarCampos();
@@ -138,6 +140,7 @@ public class TelaFormaPagamento extends JInternalFrame {
 		getContentPane().add(btnDeletar);
 
 		JButton btnNovo = new JButton("Novo");
+		btnNovo.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnNovo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				limpaCampos();
@@ -156,9 +159,12 @@ public class TelaFormaPagamento extends JInternalFrame {
 			dados[i][0] = list.get(i).getDescricao();
 
 		}
-		table.setModel(new DefaultTableModel(dados,
-
-				new String[] { "Descri\u00E7\u00E3o" }));
+		table.setModel(new DefaultTableModel(
+				dados,
+			new String[] {
+				"Descri\u00E7\u00E3o"
+			}
+		));
 
 	}
 

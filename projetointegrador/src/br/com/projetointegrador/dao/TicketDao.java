@@ -3,6 +3,7 @@ package br.com.projetointegrador.dao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Time;
 
 import br.com.projetointegrador.conexao.Conexao;
@@ -41,4 +42,5 @@ public class TicketDao {
 		}
 		return false;
 	}
+
 }

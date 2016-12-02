@@ -30,7 +30,7 @@ public class Conexao {
 			}
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();		
 		}
 		
 		return con;

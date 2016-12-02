@@ -1,12 +1,13 @@
 package br.com.projetointegrador.modelo;
 
+import java.sql.Time;
 import java.util.Date;
 
 public class Ticket {
 	private int id_ticket;
 	private String cod_ticket;
 	private Date data;
-	private Date hora_entrada;
+	private Time hora_entrada;
 	private Date hora_saida;
 	private String usuario_cnpj_cpf;
 	
@@ -15,7 +16,7 @@ public class Ticket {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Ticket(int id_ticket, String cod_ticket, Date data, Date hora_entrada, Date hora_saida,
+	public Ticket(int id_ticket, String cod_ticket, Date data, Time hora_entrada, Date hora_saida,
 			String usuario_cnpj_cpf) {
 		super();
 		this.id_ticket = id_ticket;
@@ -54,7 +55,7 @@ public class Ticket {
 		return hora_entrada;
 	}
 
-	public void setHora_entrada(Date hora_entrada) {
+	public void setHora_entrada(Time hora_entrada) {
 		this.hora_entrada = hora_entrada;
 	}
 

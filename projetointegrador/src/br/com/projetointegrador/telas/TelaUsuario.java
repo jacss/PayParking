@@ -19,6 +19,9 @@ import br.com.projetointegrador.dao.UsuarioDao;
 
 import br.com.projetointegrador.modelo.Usuario;
 import br.com.projetointegrador.util.GUIUtil;
+import br.com.projetointegrador.validacao.CPF;
+import br.com.projetointegrador.validacao.Email;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
@@ -63,11 +66,12 @@ public class TelaUsuario extends JInternalFrame {
 		setMaximizable(true);
 		setTitle("Cadastro de Usu\u00E1rios");
 		setBounds(0, 100, 567, 500);
-		GUIUtil.setLookAndFeel(this);
+		//GUIUtil.setLookAndFeel(this);
 		GUIUtil.center(this);
 		getContentPane().setLayout(null);
 
 		JLabel lblNome = new JLabel("Nome");
+		lblNome.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNome.setBounds(39, 42, 46, 14);
 		getContentPane().add(lblNome);
 
@@ -77,6 +81,7 @@ public class TelaUsuario extends JInternalFrame {
 		textNome.setColumns(10);
 
 		JLabel lblEmail = new JLabel("E-Mail");
+		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblEmail.setBounds(278, 42, 46, 14);
 		getContentPane().add(lblEmail);
 
@@ -86,7 +91,8 @@ public class TelaUsuario extends JInternalFrame {
 		textMail.setColumns(10);
 
 		JLabel lblCnpjcpf = new JLabel("Cnpj/Cpf");
-		lblCnpjcpf.setBounds(39, 98, 46, 14);
+		lblCnpjcpf.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblCnpjcpf.setBounds(39, 98, 72, 14);
 		getContentPane().add(lblCnpjcpf);
 
 		textCnpjCpf = new JTextField();
@@ -95,7 +101,8 @@ public class TelaUsuario extends JInternalFrame {
 		textCnpjCpf.setColumns(10);
 
 		JLabel lblTelefone = new JLabel("Telefone");
-		lblTelefone.setBounds(278, 98, 46, 14);
+		lblTelefone.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTelefone.setBounds(278, 98, 72, 14);
 		getContentPane().add(lblTelefone);
 
 		textTelefone = new JTextField();
@@ -104,15 +111,20 @@ public class TelaUsuario extends JInternalFrame {
 		textTelefone.setColumns(10);
 
 		JButton btnGravar = new JButton("Gravar");
+		btnGravar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnGravar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					if (validarCampos()) {
 						if (preencheObjeto()) {
-							if (dao.salvar(obj)) {
-								JOptionPane.showMessageDialog(null, "Registro salvo com sucesso!!");
-								atualizaJTable();
-								limpaCampos();
+							if (validaCpf()) {
+								if (validaEmail()) {
+									if (dao.salvar(obj)) {
+										JOptionPane.showMessageDialog(null, "Registro salvo com sucesso!!");
+										atualizaJTable();
+										limpaCampos();
+									}
+								}
 							}
 						}
 					}
@@ -128,6 +140,7 @@ public class TelaUsuario extends JInternalFrame {
 		getContentPane().add(btnGravar);
 
 		JButton btnNovo = new JButton("Novo");
+		btnNovo.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnNovo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				limpaCampos();
@@ -137,6 +150,7 @@ public class TelaUsuario extends JInternalFrame {
 		getContentPane().add(btnNovo);
 
 		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnDeletar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -159,10 +173,12 @@ public class TelaUsuario extends JInternalFrame {
 		getContentPane().add(btnDeletar);
 
 		JLabel lblLogin = new JLabel("Login");
+		lblLogin.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblLogin.setBounds(39, 158, 46, 14);
 		getContentPane().add(lblLogin);
 
 		JLabel lblSenha = new JLabel("Senha");
+		lblSenha.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblSenha.setBounds(278, 158, 46, 14);
 		getContentPane().add(lblSenha);
 
@@ -178,12 +194,12 @@ public class TelaUsuario extends JInternalFrame {
 
 		JScrollPane scrollPane = new JScrollPane();
 
-		scrollPane.setBounds(39, 261, 472, 171);
+		scrollPane.setBounds(39, 261, 472, 155);
 		getContentPane().add(scrollPane);
-		
-		
 
 		table = new JTable();
+		table.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		//table.setFont(new Font("Tahoma", Font.PLAIN, 11));
 
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -200,10 +216,6 @@ public class TelaUsuario extends JInternalFrame {
 			e1.printStackTrace();
 		}
 		scrollPane.setViewportView(table);
-		
-		
-		
-		
 
 	}
 
@@ -221,7 +233,12 @@ public class TelaUsuario extends JInternalFrame {
 
 		}
 
-		table.setModel(new DefaultTableModel(dados, new String[] { "Cnpj/Cpf", "Nome", "E-Mail", "Login", "Senha", "Telefone" }));
+		table.setModel(new DefaultTableModel(
+			dados,
+			new String[] {
+				"Cnpj/Cpf", "Nome", "E-Mail", "Login", "Senha", "Telefone"
+			}
+		));
 	}
 
 	public boolean validarCampos() {
@@ -231,18 +248,7 @@ public class TelaUsuario extends JInternalFrame {
 			return false;
 
 		}
-		if (textMail.getText().equals("")) {
-			JOptionPane.showMessageDialog(null, "O campo E-MAIL não pode ser nulo!!");
-			textMail.requestFocus();
-			return false;
 
-		}
-		if (textTelefone.getText().equals("")) {
-			JOptionPane.showMessageDialog(null, "O campo TELEFONE não pode ser nulo!!");
-			textTelefone.requestFocus();
-			return false;
-
-		}
 		if (textCnpjCpf.getText().equals("")) {
 			JOptionPane.showMessageDialog(null, "O campo CNPJ/CPF não pode ser nulo!!");
 			textCnpjCpf.requestFocus();
@@ -295,4 +301,32 @@ public class TelaUsuario extends JInternalFrame {
 		obj = new Usuario();
 
 	}
+
+	public boolean validaCpf() {
+		String cpf = textCnpjCpf.getText();
+
+		CPF pf = new CPF(cpf);
+		if (pf.isCPF()) {
+			textCnpjCpf.setText(pf.getCPF(true));
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, "Cpf invalido!!");
+		}
+		return false;
+	}
+
+	public boolean validaEmail() {
+		String email1 = textMail.getText();
+		Email em = new Email(email1);
+		if (em.isEmail() == true) {
+			textMail.setText(em.getEmail());
+			System.out.println(em.getEmail());
+		}else if(em.isEmail() ==false){
+			JOptionPane.showMessageDialog(null, "E-mail invalido!!");
+			return false;
+		}
+		
+		return true;
+	}
+
 }

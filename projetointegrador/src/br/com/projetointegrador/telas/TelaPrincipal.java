@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import java.awt.CardLayout;
+import java.awt.Font;
 
 public class TelaPrincipal extends JFrame {
 
@@ -58,7 +59,7 @@ public class TelaPrincipal extends JFrame {
 		//setMaximizedBounds(new Rectangle(0, 0, 0, 0));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setBounds(100, 100, 1361, 725);
-		GUIUtil.setLookAndFeel(this);
+		//GUIUtil.setLookAndFeel(this);
 		GUIUtil.center(this);
 	
 		setExtendedState(Frame.MAXIMIZED_BOTH);// a janela sempre sera maximizada
@@ -67,6 +68,7 @@ public class TelaPrincipal extends JFrame {
 		setJMenuBar(menuBar);
 		
 		JMenu mnCadastro = new JMenu("Cadastro");
+		mnCadastro.setFont(new Font("Tahoma", Font.BOLD, 12));
 		menuBar.add(mnCadastro);
 		
 		JMenuItem itmMenuCadUsuario = new JMenuItem("Usu\u00E1rio");
@@ -100,7 +102,22 @@ public class TelaPrincipal extends JFrame {
 		});
 		mnCadastro.add(form_pagamento);
 		
+		JMenu mnOperaes = new JMenu("Opera\u00E7\u00F5es");
+		mnOperaes.setFont(new Font("Tahoma", Font.BOLD, 12));
+		menuBar.add(mnOperaes);
+		
+		JMenuItem mntmPagamento = new JMenuItem("Pagamento");
+		mntmPagamento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TelaPagamento tp = new TelaPagamento();
+				tp.setVisible(true);
+				desktopPane.add(tp);
+			}
+		});
+		mnOperaes.add(mntmPagamento);
+		
 		JMenu mnOpes = new JMenu("Op\u00E7\u00F5es");
+		mnOpes.setFont(new Font("Tahoma", Font.BOLD, 12));
 		menuBar.add(mnOpes);
 		
 		JMenuItem mntmSair = new JMenuItem("Sair");
@@ -119,7 +136,6 @@ public class TelaPrincipal extends JFrame {
 		contentPane.setLayout(new CardLayout(0, 0));
 		
 		desktopPane = new JDesktopPane();
-		desktopPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(128, 128, 128), new Color(128, 128, 128), new Color(128, 128, 128), new Color(128, 128, 128)));
 		desktopPane.setBackground(new Color(238, 232, 170));
 		contentPane.add(desktopPane, "name_20261864522096");
 		

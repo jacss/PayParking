@@ -6,6 +6,7 @@ public class Preco {
 	private boolean perca;
 	private String tempo;
 	private boolean fracionado;
+	private boolean tolerancia;
 	
 	public Preco(){
 		
@@ -13,13 +14,14 @@ public class Preco {
 
 	
 
-	public Preco(int id_preco, double valor, boolean perca, String tempo, boolean fracionado) {
+	public Preco(int id_preco, double valor, boolean perca, String tempo, boolean fracionado,boolean tolerancia) {
 		super();
 		this.id_preco = id_preco;
 		this.valor = valor;
 		this.perca = perca;
 		this.tempo = tempo;
 		this.fracionado = fracionado;
+		this.tolerancia=tolerancia;
 	}
 
 
@@ -63,6 +65,19 @@ public class Preco {
 	public void setFracionado(boolean fracionado) {
 		this.fracionado = fracionado;
 	}
+	
+
+	public boolean isTolerancia() {
+		return tolerancia;
+	}
+
+
+
+	public void setTolerancia(boolean tolerancia) {
+		this.tolerancia = tolerancia;
+	}
+
+
 
 	@Override
 	public int hashCode() {

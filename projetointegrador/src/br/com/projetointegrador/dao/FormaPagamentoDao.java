@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import br.com.projetointegrador.conexao.Conexao;
 import br.com.projetointegrador.modelo.FormaPagamento;
+import br.com.projetointegrador.modelo.Usuario;
 
 public class FormaPagamentoDao {
 
@@ -95,5 +96,17 @@ public class FormaPagamentoDao {
 		}
 		return true;
 	}
+	public List<FormaPagamento> listaTodosFormas() throws Exception {
+		List<FormaPagamento> list = new ArrayList<FormaPagamento>();
+		sql = "select * from forma_pagamento";
+		pst = conexao.getCon().prepareStatement(sql);
 
+		rs = pst.executeQuery();
+
+		while (rs.next()) {
+			list.add(new FormaPagamento(rs.getInt("id_forma"), rs.getString("descricao")));
+		}
+		return list;
+
+}
 }
