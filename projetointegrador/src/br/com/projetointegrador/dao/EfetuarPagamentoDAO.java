@@ -30,6 +30,8 @@ public class EfetuarPagamentoDAO {
 			pst.setDouble(4, obj.getTotalAPagar());
 			pst.setDouble(5, obj.getValorRecebido());
 			
+			System.out.println("Preço: "+ obj.getPreco().getId_preco());
+			
 			pst.executeUpdate();
 			return true;
 		} catch (Exception e) {

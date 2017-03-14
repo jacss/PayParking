@@ -25,7 +25,7 @@ public class Email {
 			Matcher matcher = pattern.matcher(email);
 			if(matcher.matches()){
 				//isMailIdValid = true;
-				JOptionPane.showMessageDialog(null, "email ok");
+			
 				return true;
 			}else{
 				

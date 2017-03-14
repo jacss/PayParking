@@ -58,11 +58,12 @@ public class TelaPagamento extends JInternalFrame {
 	private DataForm df = new DataForm();
 	private JButton btnGerarTicket = new JButton("Gerar Ticket");
 	private JCheckBox chckbxPerdeuTicket = new JCheckBox("Perdeu Ticket?");
-     private PrecoDao daop = new PrecoDao();
-     private Preco preco = new Preco();
-     private String p;
-     private List<FormaPagamento>listFormaPagamento = new ArrayList<>();
-     private Pagamento pagamento = new Pagamento();
+	private PrecoDao daop = new PrecoDao();
+	private Preco preco = new Preco();
+	private String p;
+	private List<FormaPagamento> listFormaPagamento = new ArrayList<>();
+	private Pagamento pagamento = new Pagamento();
+
 	/**
 	 * Create the frame.
 	 */
@@ -142,7 +143,7 @@ public class TelaPagamento extends JInternalFrame {
 		textValorRecebido = new JTextField();
 		textValorRecebido.addKeyListener(new KeyAdapter() {
 			@Override
-			
+
 			public void keyPressed(KeyEvent arg0) {
 				calculaTroco();
 			}
@@ -167,21 +168,39 @@ public class TelaPagamento extends JInternalFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				pagamento.setTicket(ticket);
 				pagamento.setFormaPagamento((FormaPagamento) comboFormaPag.getSelectedItem());
-			    pagamento.setPreco(preco);
-			    pagamento.setTotalAPagar(Double.parseDouble(textTotalPagar.getText()));
-			    pagamento.setValorRecebido(Double.parseDouble(textValorRecebido.getText()));
-			    
-			  EfetuarPagamentoDAO dao =new EfetuarPagamentoDAO();
-			  
-			  if(dao.salvar(pagamento)){
-				  JOptionPane.showMessageDialog(null, "Registro salvo com sucesso!!");
-				  limpaCampos();
-			  }else{
-				  JOptionPane.showMessageDialog(null, "Não foi possivel salvar o registro!!");
-			  }
-			   
-			   
-			  }
+
+				if (chckbxPerdeuTicket.isSelected()) {
+
+					try {
+						preco = daop.getPrecoTicketPerdido();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				} else {
+					PrecoDao daoPreco = new PrecoDao();
+					try {
+						preco = daoPreco.getPrecoTicketFracionado();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				pagamento.setPreco(preco);
+				pagamento.setTotalAPagar(Double.parseDouble(textTotalPagar.getText()));
+				pagamento.setValorRecebido(Double.parseDouble(textValorRecebido.getText()));
+
+				EfetuarPagamentoDAO dao = new EfetuarPagamentoDAO();
+
+				if (dao.salvar(pagamento)) {
+					JOptionPane.showMessageDialog(null, "Registro salvo com sucesso!!");
+					limpaCampos();
+				} else {
+					JOptionPane.showMessageDialog(null, "Não foi possivel salvar o registro!!");
+				}
+
+			}
 		});
 		btnEfetuarPagamento.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnEfetuarPagamento.setBounds(35, 384, 93, 23);
@@ -193,15 +212,13 @@ public class TelaPagamento extends JInternalFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				TicketController controller = new TicketController();
-				Ticket ticket = controller.gerarTicket();				
+				Ticket ticket = controller.gerarTicket();
 				textTicket.setText(ticket.getCod_ticket());
-				
+
 				buscaTicket();
-				
 
 			}
 
-		
 		});
 		getContentPane().add(btnGerarTicket);
 
@@ -224,7 +241,6 @@ public class TelaPagamento extends JInternalFrame {
 
 			}
 
-		
 		});
 		btnPesquisarTicket.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnPesquisarTicket.setBounds(242, 385, 132, 23);
@@ -235,31 +251,29 @@ public class TelaPagamento extends JInternalFrame {
 		lblFormaDePagamento.setBounds(318, 120, 152, 14);
 		getContentPane().add(lblFormaDePagamento);
 
-		
 		FormaPagamentoDao dao = new FormaPagamentoDao();
-	try {
-		listFormaPagamento = dao.listaTodosFormas();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-		for(FormaPagamento f:listFormaPagamento){
+		try {
+			listFormaPagamento = dao.listaTodosFormas();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (FormaPagamento f : listFormaPagamento) {
 			comboFormaPag.addItem(f);
 		}
-		
+
 		comboFormaPag.setBounds(318, 142, 185, 20);
 		getContentPane().add(comboFormaPag);
 		chckbxPerdeuTicket.setFont(new Font("Tahoma", Font.BOLD, 12));
-		
-		
+
 		chckbxPerdeuTicket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(chckbxPerdeuTicket.isSelected()){
+				if (chckbxPerdeuTicket.isSelected()) {
 					btnGerarTicket.setEnabled(true);
-					
-				}else{
+
+				} else {
 					btnGerarTicket.setEnabled(false);
-					
+
 				}
 			}
 		});
@@ -290,65 +304,66 @@ public class TelaPagamento extends JInternalFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		calculaTotal();
-		
 
 	}
 
 	private void calculaTotal() {
-		
+
 		if (chckbxPerdeuTicket.isSelected()) {
 			try {
-				preco =daop.getPrecoTicketPerdido();
-				textTotalPagar.setText(""+preco.getValor());
-				
+				preco = daop.getPrecoTicketPerdido();
+				textTotalPagar.setText("" + preco.getValor());
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
 		} else {
 			try {
-				String horacompleta= df.dateToString(df.parseData(p, "H:mm"), "H:mm");
-				System.out.println("Hora completa: "+ horacompleta);
-				
-				String hora= df.dateToString(df.parseData(p, "H"), "H");
-				System.out.println("Hora completa: "+ horacompleta);
-				
-				String minuto= df.dateToString(df.parseData(p, "mm"), "mm");
-				System.out.println("Hora completa: "+ horacompleta);
-				
-				
+
+				Date data = df.parseData(p, "H:mm");
+				String horacompleta = df.dateToString(data, "H:mm");
+				System.out.println("Hora completa: " + horacompleta);
+
+				String hora = df.dateToString(data, "H");
+				System.out.println("Hora: " + hora);
+
+				String minuto = df.dateToString(data, "mm");
+				System.out.println("Minuto: " + minuto);
+
 				Integer horac = Integer.parseInt(hora);
 				Integer minutoc = Integer.parseInt(minuto);
-				
+
 				PrecoDao dao = new PrecoDao();
 				Preco preco = dao.getPrecoTicketFracionado();
-				Float valorPorHora= (float) preco.getValor();
-				
+				pagamento.setPreco(preco);
+
+				Float valorPorHora = (float) preco.getValor();
+
 				Preco precot = dao.getPrecoTicketTolerancia();
-				
+
 				Integer tolerancia = Integer.parseInt(df.dateToString(df.parseData(precot.getTempo(), "mm"), "mm"));
-				Integer somaMinutos= (horac*60)+minutoc;
-				
-				
-				
-				float totalHora= horac*valorPorHora;
-				float totalMinuto= (valorPorHora/60)*minutoc;
-				
-				float totalGeral = totalHora+totalMinuto;
-				textTotalPagar.setText(""+totalGeral);
-				System.out.println("totalHora: "+ totalHora);
-				System.out.println("totalMinuto : "+ totalMinuto);
-				
-			} catch (Exception   e) {
+				Integer somaMinutos = (horac * 60) + minutoc;
+
+				System.out.println("Minuto c " + minutoc);
+
+				float totalHora = horac * valorPorHora;
+				float totalMinuto = (valorPorHora / 60) * minutoc;
+
+				float totalGeral = totalHora + totalMinuto;
+				textTotalPagar.setText("" + totalGeral);
+				System.out.println("totalHora: " + totalHora);
+				System.out.println("totalMinuto : " + totalMinuto);
+				System.out.println("totalGeral: " + totalGeral);
+
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
 		}
 	}
 
@@ -373,6 +388,7 @@ public class TelaPagamento extends JInternalFrame {
 		comboFormaPag.setSelectedItem(null);
 
 	}
+
 	private void buscaTicket() {
 		validaCampos();
 
@@ -380,28 +396,31 @@ public class TelaPagamento extends JInternalFrame {
 		ticket = dao.consultaTicket(ticket);
 
 		preencherCampos();
-		
+
 	}
-	public double calculaTroco( ){
-		
-		double valorRec = Double.parseDouble(textValorRecebido.getText());
-		double totalApa = Double.parseDouble(textTotalPagar.getText());
-		double troco = valorRec - totalApa;
-		textTroco.setText(""+ Math.ceil(troco));
-		
-		return troco;
-		
+
+	public double calculaTroco() {
+		double troco = 0;
+		if (!textValorRecebido.getText().trim().isEmpty()) {
+			double valorRec = Double.parseDouble(textValorRecebido.getText());
+			double totalApa = Double.parseDouble(textTotalPagar.getText());
+			troco = valorRec - totalApa;
+			textTroco.setText("" + Math.ceil(troco));
 		}
-	public void bucaValorFracionado(){
+		return troco;
+
+	}
+
+	public void bucaValorFracionado() {
 		try {
 			double valor = daop.getPrecoFracionado().getValor();
-			double total =(valor* Double.parseDouble(p));
-			
+			double total = (valor * Double.parseDouble(p));
+
 			JOptionPane.showMessageDialog(null, total);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }
